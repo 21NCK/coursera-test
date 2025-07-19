@@ -1,9 +1,11 @@
+/* jshint esversion: 6 */
+
 const { Int32 } = require("mongodb");
 const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-const cars = new Schema({
+const carSchema = new Schema({
   dealer_id: {
     type: Number,
     required: true,
@@ -30,4 +32,4 @@ const cars = new Schema({
   },
 });
 
-module.exports = mongoose.model("cars", cars);
+module.exports = mongoose.model("Car", carSchema);

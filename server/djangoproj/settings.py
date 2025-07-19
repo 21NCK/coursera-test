@@ -29,13 +29,21 @@ SECRET_KEY =\
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost', 'https://congkhanhtru-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
-CSRF_TRUSTED_ORIGINS = [
-    'https://congkhanhtru-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
+    'localhost',
+    'https://congkhanhtru-8000.theiadockernext-0-labs-prod-'
+    'theiak8s-4-tor01.proxy.cognitiveclass.ai'
+]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [],
-}
+CSRF_TRUSTED_ORIGINS = [
+    'https://congkhanhtru-8000.theiadockernext-0-labs-prod-'
+    'theiak8s-4-tor01.proxy.cognitiveclass.ai'
+]
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'frontend/static'),
+    os.path.join(BASE_DIR, 'frontend/build'),
+    os.path.join(BASE_DIR, 'frontend/build/static'),
+]
 
 # Application definition
 
