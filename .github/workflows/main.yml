@@ -1,4 +1,4 @@
-name: 'Lint & Auto-fix Code'
+name: 'Lint Code'
 
 on:
   push:
@@ -8,74 +8,58 @@ on:
 
 jobs:
   lint_python:
-    if: github.event_name == 'push'  # Auto-fix only on push
-    name: Lint & Fix Python Files
+    name: Lint Python Files
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-      with:
-        persist-credentials: false
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.12
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
 
-    - name: Install Python Tools
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 autopep8 isort autoflake
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 autopep8 isort autoflake
 
-    - name: Auto-fix Python Code
-      run: |
-        autoflake --in-place --recursive --remove-all-unused-imports server/
-        isort server/
-        autopep8 --in-place --recursive server/
+      - name: Auto-Fix Python Code
+        run: |
+          autoflake --in-place --recursive --remove-all-unused-imports server/
+          isort server/
+          autopep8 --in-place --recursive server/
 
-    - name: Run Flake8 Linter
-      run: |
-        find . -name "*.py" -exec flake8 {} +
-        echo "✅ Linted Python files successfully."
-
-    - name: Commit Python Fixes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: "chore: auto-fix Python lint issues"
-        file_pattern: 'server/**/*.py'
+      - name: Run flake8 Linter
+        run: |
+          echo "Running flake8..."
+          find ./server -name "*.py" -exec flake8 {} +
+          echo "Linted all the Python files successfully ✅"
 
   lint_js:
-    if: github.event_name == 'push'  # Auto-fix only on push
-    name: Lint & Fix JavaScript Files
+    name: Lint JavaScript Files
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-      with:
-        persist-credentials: false
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 14
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
 
-    - name: Install Prettier & JSHint
-      run: |
-        npm install --save-dev prettier
-        npm install --global jshint
+      - name: Install JS Linters
+        run: |
+          npm install --global jshint prettier
 
-    - name: Auto-fix JavaScript Code
-      run: npx prettier --write "server/database/**/*.js"
+      - name: Auto-Fix JS Code with Prettier
+        run: |
+          prettier --write "server/database/**/*.js"
 
-    - name: Run JSHint
-      run: |
-        find ./server/database -name "*.js" -exec jshint {} +
-        echo "✅ Linted JavaScript files successfully."
-
-    - name: Commit JavaScript Fixes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: "chore: auto-fix JS lint issues"
-        file_pattern: 'server/database/**/*.js'
+      - name: Run JSHint Linter
+        run: |
+          echo "Running JSHint..."
+          find ./server/database -name "*.js" -exec jshint --config .jshintrc {} +
+          echo "Linted all the JS files successfully ✅"
